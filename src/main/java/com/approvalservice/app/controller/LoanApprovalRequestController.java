@@ -1,14 +1,15 @@
 package com.approvalservice.app.controller;
 
 import com.approvalservice.app.enums.APIResponseCodes;
-import com.approvalservice.app.model.LoanApprovalRequest;
-import com.approvalservice.app.model.response.BasicResponse;
-import com.approvalservice.app.model.response.ErrorResponse;
+import com.approvalservice.app.model.request.LoanApprovalRequest;
+import com.approvalservice.app.model.response.api.BasicResponse;
+import com.approvalservice.app.model.response.api.ErrorResponse;
 import com.approvalservice.app.service.LoanApprover;
 import com.approvalservice.app.storage.LoanApproversStorage;
 import com.approvalservice.app.util.CustomerIdChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,7 @@ public class LoanApprovalRequestController
 
         BasicResponse result = loanApprovalService.approveLoanRequest(request);
 
-        return ResponseEntity.status(200).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     /**
@@ -66,25 +67,29 @@ public class LoanApprovalRequestController
     {
         if (request.getCustomerId() == null)
         {
-            return ResponseEntity.status(400).body(new ErrorResponse(APIResponseCodes.EMPTY_CUSTOMER_ID));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorResponse(APIResponseCodes.EMPTY_CUSTOMER_ID));
         }
         else
             {
                 if (!CustomerIdChecker.isValid(request.getCustomerId()))
             {
-                return ResponseEntity.status(400).body(new ErrorResponse(APIResponseCodes.WRONG_CUSTOMER_ID));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new ErrorResponse(APIResponseCodes.WRONG_CUSTOMER_ID));
             }
         }
         if (request.getApprovers().size() > numberOfApprovers)
         {
-            return ResponseEntity.status(400).body(new ErrorResponse(APIResponseCodes.WRONG_LOAN_APPROVERS));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorResponse(APIResponseCodes.WRONG_LOAN_APPROVERS));
         }
         else
             {
                 List<String> approver = loanApproversStorage.getFirstApprover(request.getApprovers());
                 if (approver.isEmpty())
                 {
-                    return ResponseEntity.status(400).body(new ErrorResponse(APIResponseCodes.APPROVERS_NOT_FOUND));
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                            new ErrorResponse(APIResponseCodes.APPROVERS_NOT_FOUND));
                 }
             }
 

@@ -1,4 +1,4 @@
-package com.approvalservice.app.model;
+package com.approvalservice.app.model.request;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

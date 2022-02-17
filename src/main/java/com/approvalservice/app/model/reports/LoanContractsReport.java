@@ -1,4 +1,4 @@
-package com.approvalservice.app.model;
+package com.approvalservice.app.model.reports;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,14 +8,14 @@ import lombok.Setter;
 import java.beans.Transient;
 
 /**
- * Loan report
+ * Loan report according to the task
  */
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanContractsReport
+public class LoanContractsReport extends BasicLoanContractsReport
 {
     long contractsCount;
     long loanAmountsSum;
@@ -28,5 +28,12 @@ public class LoanContractsReport
     {
         return !(contractsCount != 0 && loanAmountsSum != 0
                 && avgLoanAmount != 0 && maxLoanAmount != 0 && minLoanAmount != 0);
+    }
+
+    @Transient
+    @Override
+    public String getMessage()
+    {
+        return message;
     }
 }

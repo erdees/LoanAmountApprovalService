@@ -1,14 +1,15 @@
 package com.approvalservice.app.storage;
 
-import com.approvalservice.app.model.ClientAccount;
-import com.approvalservice.app.model.response.LoanApproveResponse;
+import com.approvalservice.app.model.reports.ClientAccount;
+import com.approvalservice.app.model.response.approval.ApprovedLoan;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Access to a contracts and stat
+ * Access to a contracts and statistics raw data. If the contract went to `customerContracts` Map, we assume that
+ * approved contract was already sent to the customer.
  */
 
 @Component
@@ -21,13 +22,13 @@ public class LoanContractsStorage
         return !customerContracts.containsKey(customerId);
     }
 
-    public void addNew(String customerId, LoanApproveResponse response)
+    public void addNew(String customerId, ApprovedLoan response)
     {
         customerContracts.computeIfAbsent(customerId,
                 k -> new ClientAccount(new ArrayList<>(Collections.singletonList(response)), true));
     }
 
-    public void updateExisting(String customerId, LoanApproveResponse response)
+    public void updateExisting(String customerId, ApprovedLoan response)
     {
         if (customerContracts.containsKey(customerId)) {
             customerContracts.get(customerId).getApprovedLoans().add(response);
@@ -48,15 +49,11 @@ public class LoanContractsStorage
         }
     }
 
-    public List<LoanApproveResponse> getAllContracts()
+    public List<ApprovedLoan> getAllContracts()
     {
-        List<LoanApproveResponse> allLoans = new ArrayList<>();
+        List<ApprovedLoan> allLoans = new ArrayList<>();
 
-        for(Map.Entry<String, ClientAccount> entry : customerContracts.entrySet()) {
-            ClientAccount customerProfile = entry.getValue();
-
-            allLoans.addAll(customerProfile.getApprovedLoans());
-        }
+        customerContracts.forEach((key, customerProfile) -> allLoans.addAll(customerProfile.getApprovedLoans()));
 
         return allLoans;
     }

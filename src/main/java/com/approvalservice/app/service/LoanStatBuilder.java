@@ -1,7 +1,7 @@
 package com.approvalservice.app.service;
 
-import com.approvalservice.app.model.LoanContractsReport;
-import com.approvalservice.app.model.response.LoanApproveResponse;
+import com.approvalservice.app.model.reports.LoanContractsReport;
+import com.approvalservice.app.model.response.approval.ApprovedLoan;
 import com.approvalservice.app.storage.LoanContractsStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class LoanStatBuilder
      */
     public LoanContractsReport getStatsOnLoans()
     {
-        List<LoanApproveResponse> allLoans = loanContractsStorage.getAllContracts();
+        List<ApprovedLoan> allLoans = loanContractsStorage.getAllContracts();
         List<Long> loanAmounts = allContractsMoney(allLoans);
 
         if (!allLoans.isEmpty())
@@ -50,11 +50,11 @@ public class LoanStatBuilder
         }
     }
 
-    private long getLoanAmountsSum(List<LoanApproveResponse> allLoans)
+    private long getLoanAmountsSum(List<ApprovedLoan> allLoans)
     {
         long allLoansSum = 0;
 
-        for (LoanApproveResponse contract : allLoans)
+        for (ApprovedLoan contract : allLoans)
         {
             allLoansSum = allLoansSum + contract.getLoanAmount();
         }
@@ -82,11 +82,11 @@ public class LoanStatBuilder
     /**
      * Create a list with all amounts of each issued loan for further calculation
      */
-    private List<Long> allContractsMoney(List<LoanApproveResponse> allLoans)
+    private List<Long> allContractsMoney(List<ApprovedLoan> allLoans)
     {
         List<Long> loanAmounts = new ArrayList<>();
 
-        for (LoanApproveResponse contract : allLoans)
+        for (ApprovedLoan contract : allLoans)
         {
             loanAmounts.add(contract.getLoanAmount());
         }

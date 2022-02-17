@@ -1,5 +1,6 @@
-package com.approvalservice.app.model.response;
+package com.approvalservice.app.model.response.approval;
 
+import com.approvalservice.app.model.response.api.BasicResponse;
 import lombok.Getter;
 
 /**
@@ -7,14 +8,14 @@ import lombok.Getter;
  */
 
 @Getter
-public class LoanApproveResponse extends BasicResponse
+public class ApprovedLoan extends BasicResponse
 {
     String userId;
     boolean approved;
     String approverName;
     long loanAmount;
 
-    public LoanApproveResponse(String message, String userId, boolean approved, String approverName, long loanAmount)
+    public ApprovedLoan(String message, String userId, boolean approved, String approverName, long loanAmount)
     {
         super(message);
         this.userId = userId;

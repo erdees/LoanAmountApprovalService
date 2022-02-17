@@ -1,10 +1,12 @@
 package com.approvalservice.app.controller;
 
 import com.approvalservice.app.enums.APIBusinessMessages;
-import com.approvalservice.app.model.LoanContractsReport;
-import com.approvalservice.app.model.response.BasicResponse;
+import com.approvalservice.app.model.reports.BasicLoanContractsReport;
+import com.approvalservice.app.model.reports.LoanContractsReport;
+import com.approvalservice.app.model.response.api.BasicResponse;
 import com.approvalservice.app.service.LoanStatBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,16 +30,17 @@ public class LoansReportController
      * Loan statistics endpoint
      */
     @GetMapping("/api/loans/stat")
-    public ResponseEntity<?> createRequest()
+    public ResponseEntity<BasicLoanContractsReport> createRequest()
     {
         LoanContractsReport result = loanStatBuilder.getStatsOnLoans();
 
         if (result.isEmpty()) {
-            return ResponseEntity.status(200).body(new BasicResponse(APIBusinessMessages.NO_CONTRACTS_FOR_STAT));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new BasicLoanContractsReport(APIBusinessMessages.NO_CONTRACTS_FOR_STAT));
         }
         else
         {
-            return ResponseEntity.status(200).body(result);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.approvalservice.app.service;
 
 import com.approvalservice.app.enums.APIBusinessMessages;
-import com.approvalservice.app.model.LoanApprovalRequest;
-import com.approvalservice.app.model.response.BasicResponse;
-import com.approvalservice.app.model.response.LoanApproveResponse;
+import com.approvalservice.app.model.request.LoanApprovalRequest;
+import com.approvalservice.app.model.response.api.BasicResponse;
+import com.approvalservice.app.model.response.approval.ApprovedLoan;
 import com.approvalservice.app.storage.LoanApproversStorage;
 import com.approvalservice.app.storage.LoanContractsStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class LoanApprover
 
         if (isNew(customerId))
         {
-            LoanApproveResponse response = prepareResponse(request, approver);
+            ApprovedLoan response = prepareResponse(request, approver);
 
             loanContractsStorage.addNew(customerId, response);
             loanContractsStorage.setProcessing(customerId, false);
@@ -67,7 +67,7 @@ public class LoanApprover
                         }
                     }
 
-                LoanApproveResponse response = prepareResponse(request, approver);
+                ApprovedLoan response = prepareResponse(request, approver);
 
                 loanContractsStorage.updateExisting(customerId, response);
 
@@ -81,9 +81,9 @@ public class LoanApprover
         return loanContractsStorage.isExists(customerId);
     }
 
-    private LoanApproveResponse prepareResponse(LoanApprovalRequest request, List<String> approver)
+    private ApprovedLoan prepareResponse(LoanApprovalRequest request, List<String> approver)
     {
-        return new LoanApproveResponse("Approved Loan", request.getCustomerId(), true,
+        return new ApprovedLoan("Approved Loan", request.getCustomerId(), true,
                 approver.get(0), request.getLoanAmount());
     }
 

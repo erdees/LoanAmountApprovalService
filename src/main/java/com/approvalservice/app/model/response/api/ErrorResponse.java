@@ -1,4 +1,4 @@
-package com.approvalservice.app.model.response;
+package com.approvalservice.app.model.response.api;
 
 import com.approvalservice.app.enums.APIResponseCodes;
 import lombok.Getter;

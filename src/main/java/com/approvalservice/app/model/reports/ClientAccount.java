@@ -1,6 +1,6 @@
-package com.approvalservice.app.model;
+package com.approvalservice.app.model.reports;
 
-import com.approvalservice.app.model.response.LoanApproveResponse;
+import com.approvalservice.app.model.response.approval.ApprovedLoan;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ClientAccount
 {
-    private List<LoanApproveResponse> approvedLoans;
+    private List<ApprovedLoan> approvedLoans;
     private boolean processing;
 }
