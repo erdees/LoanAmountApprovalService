@@ -3,7 +3,6 @@ package com.approvalservice.app.controller;
 import com.approvalservice.app.enums.APIBusinessMessages;
 import com.approvalservice.app.model.reports.BasicLoanContractsReport;
 import com.approvalservice.app.model.reports.LoanContractsReport;
-import com.approvalservice.app.model.response.api.BasicResponse;
 import com.approvalservice.app.service.LoanStatBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

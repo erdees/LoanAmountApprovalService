@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,6 +41,8 @@ public class LoanApprover
 
     public BasicResponse approveLoanRequest(LoanApprovalRequest request)
     {
+        LocalDateTime now = LocalDateTime.now();
+
         List<String> approver = loanApproversStorage.getFirstApprover(request.getApprovers());
         String customerId = request.getCustomerId();
 
@@ -48,6 +51,8 @@ public class LoanApprover
         if (isNew(customerId))
         {
             ApprovedLoan response = prepareResponse(request, approver);
+
+            response.setContractTime(now);
 
             loanContractsStorage.addNew(customerId, response);
             loanContractsStorage.setProcessing(customerId, false);
@@ -69,9 +74,11 @@ public class LoanApprover
 
                 ApprovedLoan response = prepareResponse(request, approver);
 
-                loanContractsStorage.updateExisting(customerId, response);
+                response.setContractTime(now);
 
+                loanContractsStorage.updateExisting(customerId, response);
                 loanContractsStorage.setProcessing(customerId, false);
+
                 return response;
             }
     }

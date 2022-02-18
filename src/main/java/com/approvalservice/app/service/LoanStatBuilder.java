@@ -6,6 +6,7 @@ import com.approvalservice.app.storage.LoanContractsStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,8 @@ public class LoanStatBuilder
      */
     public LoanContractsReport getStatsOnLoans()
     {
-        List<ApprovedLoan> allLoans = loanContractsStorage.getAllContracts();
+        LocalDateTime time = LocalDateTime.now();
+        List<ApprovedLoan> allLoans = loanContractsStorage.getFilteredContracts(time);
         List<Long> loanAmounts = allContractsMoney(allLoans);
 
         if (!allLoans.isEmpty())
@@ -50,6 +52,9 @@ public class LoanStatBuilder
         }
     }
 
+    /**
+     * Get sum of all loan amounts
+     */
     private long getLoanAmountsSum(List<ApprovedLoan> allLoans)
     {
         long allLoansSum = 0;
