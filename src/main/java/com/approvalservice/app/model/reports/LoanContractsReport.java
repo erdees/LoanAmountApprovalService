@@ -17,11 +17,11 @@ import java.beans.Transient;
 @AllArgsConstructor
 public class LoanContractsReport extends BasicLoanContractsReport
 {
-    long contractsCount;
-    long loanAmountsSum;
-    long avgLoanAmount;
-    long maxLoanAmount;
-    long minLoanAmount;
+    private long contractsCount;
+    private long loanAmountsSum;
+    private long avgLoanAmount;
+    private long maxLoanAmount;
+    private long minLoanAmount;
 
     @Transient
     public boolean isEmpty()
@@ -34,6 +34,6 @@ public class LoanContractsReport extends BasicLoanContractsReport
     @Override
     public String getMessage()
     {
-        return message;
+        return super.getMessage();
     }
 }

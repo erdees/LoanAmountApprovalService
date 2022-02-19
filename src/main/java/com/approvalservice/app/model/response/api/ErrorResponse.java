@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class ErrorResponse extends BasicResponse
 {
-    boolean success;
+    private boolean success;
 
     public ErrorResponse(APIResponseCodes code)
     {

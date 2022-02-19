@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BasicLoanContractsReport
 {
-    String message;
+    private String message;
 
     public BasicLoanContractsReport(APIBusinessMessages message)
     {

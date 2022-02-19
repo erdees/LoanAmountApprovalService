@@ -17,6 +17,7 @@ public class LoanApproversStorage
     private static final Set<String> loanApprovers = new HashSet<>();
 
     static {
+        // Generated from https://www.fantasynamegenerators.com/lithuanian-names.php
         loanApprovers.add("Mamertas Juronis");
         loanApprovers.add("Albertas Kanisauskas");
         loanApprovers.add("Juozapas Vaira");
@@ -29,19 +30,33 @@ public class LoanApproversStorage
         loanApprovers.add("Gaile Minderyte");
     }
 
-    public List<String> getFirstApprover(List<String> approvers)
+    /**
+     * Check if approvers exist for an initial loan approval request
+     */
+    public boolean isApproversExist(List<String> approvers)
     {
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> requestApprovers = new ArrayList<>();
 
         for (String line : approvers)
         {
             if (loanApprovers.contains(line))
             {
-                result.add(line);
-                return result;
+                requestApprovers.add(line);
+            }
+            else
+            {
+                return false;
             }
         }
 
-        return result;
+        return !requestApprovers.isEmpty();
+    }
+
+    /**
+     * Checking if approver exist for pending loan contracts
+     */
+    public boolean isApproverExist(String approver)
+    {
+        return loanApprovers.contains(approver);
     }
 }

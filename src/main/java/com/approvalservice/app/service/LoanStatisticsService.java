@@ -1,7 +1,7 @@
 package com.approvalservice.app.service;
 
 import com.approvalservice.app.model.reports.LoanContractsReport;
-import com.approvalservice.app.model.response.approval.ApprovedLoan;
+import com.approvalservice.app.model.response.approval.LoanContract;
 import com.approvalservice.app.storage.LoanContractsStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ import java.util.OptionalDouble;
  */
 
 @Service
-public class LoanStatBuilder
+public class LoanStatisticsService
 {
-    LoanContractsStorage loanContractsStorage;
+    private LoanContractsStorage loanContractsStorage;
 
     @Autowired
-    public void setLoanContractsStorage(LoanContractsStorage loanContractsStorage)
+    private void setLoanContractsStorage(LoanContractsStorage loanContractsStorage)
     {
         this.loanContractsStorage = loanContractsStorage;
     }
@@ -33,7 +33,7 @@ public class LoanStatBuilder
     public LoanContractsReport getStatsOnLoans()
     {
         LocalDateTime time = LocalDateTime.now();
-        List<ApprovedLoan> allLoans = loanContractsStorage.getFilteredContracts(time);
+        List<LoanContract> allLoans = loanContractsStorage.getFilteredContracts(time);
         List<Long> loanAmounts = allContractsMoney(allLoans);
 
         if (!allLoans.isEmpty())
@@ -52,14 +52,11 @@ public class LoanStatBuilder
         }
     }
 
-    /**
-     * Get sum of all loan amounts
-     */
-    private long getLoanAmountsSum(List<ApprovedLoan> allLoans)
+    private long getLoanAmountsSum(List<LoanContract> allLoans)
     {
         long allLoansSum = 0;
 
-        for (ApprovedLoan contract : allLoans)
+        for (LoanContract contract : allLoans)
         {
             allLoansSum = allLoansSum + contract.getLoanAmount();
         }
@@ -84,14 +81,12 @@ public class LoanStatBuilder
         return Collections.min(loanAmounts);
     }
 
-    /**
-     * Create a list with all amounts of each issued loan for further calculation
-     */
-    private List<Long> allContractsMoney(List<ApprovedLoan> allLoans)
+
+    private List<Long> allContractsMoney(List<LoanContract> allLoans)
     {
         List<Long> loanAmounts = new ArrayList<>();
 
-        for (ApprovedLoan contract : allLoans)
+        for (LoanContract contract : allLoans)
         {
             loanAmounts.add(contract.getLoanAmount());
         }

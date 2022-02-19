@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BasicResponse
 {
-    String message;
+    private String message;
 
     public BasicResponse(APIBusinessMessages messages)
     {

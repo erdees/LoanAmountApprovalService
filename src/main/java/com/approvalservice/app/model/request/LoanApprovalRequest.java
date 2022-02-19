@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoanApprovalRequest
 {
-    String customerId;
-    long loanAmount;
-    List<String> approvers;
+    private String customerId;
+    private long loanAmount;
+    private List<String> approvers;
 }
