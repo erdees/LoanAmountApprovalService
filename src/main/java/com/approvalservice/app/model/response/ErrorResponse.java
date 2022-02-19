@@ -1,6 +1,6 @@
-package com.approvalservice.app.model.response.api;
+package com.approvalservice.app.model.response;
 
-import com.approvalservice.app.enums.APIResponseCodes;
+import com.approvalservice.app.enums.ErrorMessages;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +14,9 @@ public class ErrorResponse extends BasicResponse
 {
     private boolean success;
 
-    public ErrorResponse(APIResponseCodes code)
+    public ErrorResponse(ErrorMessages code)
     {
         super(code.getResult());
-        this.success = code.isPositive();
+        this.success = code.isSuccess();
     }
 }

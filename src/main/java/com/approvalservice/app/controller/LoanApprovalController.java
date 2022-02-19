@@ -1,13 +1,13 @@
 package com.approvalservice.app.controller;
 
-import com.approvalservice.app.enums.APIBusinessMessages;
-import com.approvalservice.app.enums.APIResponseCodes;
-import com.approvalservice.app.model.reports.BasicLoanContractsReport;
-import com.approvalservice.app.model.reports.LoanContractsReport;
-import com.approvalservice.app.model.request.LoanApprovalRequest;
-import com.approvalservice.app.model.response.api.BasicResponse;
-import com.approvalservice.app.model.response.api.ErrorResponse;
-import com.approvalservice.app.model.response.approval.LoanContractApprovalRequest;
+import com.approvalservice.app.enums.BusinessMessages;
+import com.approvalservice.app.enums.ErrorMessages;
+import com.approvalservice.app.model.reports.BasicContractsReport;
+import com.approvalservice.app.model.reports.ContractsReport;
+import com.approvalservice.app.model.approval.PendingLoan;
+import com.approvalservice.app.model.response.BasicResponse;
+import com.approvalservice.app.model.response.ErrorResponse;
+import com.approvalservice.app.model.approval.Approval;
 import com.approvalservice.app.service.LoanApprovalService;
 import com.approvalservice.app.service.LoanStatisticsService;
 import com.approvalservice.app.storage.LoanApproversStorage;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("/api/loans")
+@RequestMapping("/api/loan")
 public class LoanApprovalController
 {
     private LoanApprovalService loanApprovalService;
@@ -56,10 +56,10 @@ public class LoanApprovalController
     /**
      * Loan approval request endpoint
      */
-    @PostMapping("/loan-approval-request")
-    public ResponseEntity<BasicResponse> createLoanRequest(@RequestBody LoanApprovalRequest request)
+    @PostMapping("/request")
+    public ResponseEntity<BasicResponse> createLoanRequest(@RequestBody PendingLoan request)
     {
-        ResponseEntity<BasicResponse> responseEntity = checkApprovalRequestBody(request);
+        ResponseEntity<BasicResponse> responseEntity = checkPendingLoanBody(request);
         if (responseEntity != null)
         {
             return responseEntity;
@@ -73,10 +73,10 @@ public class LoanApprovalController
     /**
      * Loan approval request endpoint
      */
-    @PostMapping("/contract-approval")
-    public ResponseEntity<BasicResponse> approveLoanRequest(@RequestBody LoanContractApprovalRequest request)
+    @PostMapping("/approval")
+    public ResponseEntity<BasicResponse> approveLoanRequest(@RequestBody Approval request)
     {
-        ResponseEntity<BasicResponse> responseEntity = checkContractApprovalRequest(request);
+        ResponseEntity<BasicResponse> responseEntity = checkApprovalRequest(request);
         if (responseEntity != null)
         {
             return responseEntity;
@@ -88,16 +88,16 @@ public class LoanApprovalController
     }
 
     /**
-     * Loan statistics endpoint
+     * Loan report endpoint
      */
     @GetMapping("/report")
-    public ResponseEntity<BasicLoanContractsReport> createRequest()
+    public ResponseEntity<BasicContractsReport> createRequest()
     {
-        LoanContractsReport result = loanStatisticsService.getStatsOnLoans();
+        ContractsReport result = loanStatisticsService.getStatsOnLoans();
 
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new BasicLoanContractsReport(APIBusinessMessages.NO_CONTRACTS_FOR_STAT));
+                    new BasicContractsReport(BusinessMessages.NO_CONTRACTS_FOR_STAT));
         }
         else
         {
@@ -105,50 +105,55 @@ public class LoanApprovalController
         }
     }
 
-    private ResponseEntity<BasicResponse> checkApprovalRequestBody(@RequestBody LoanApprovalRequest request)
+    private ResponseEntity<BasicResponse> checkPendingLoanBody(@RequestBody PendingLoan request)
     {
-        if (request.getCustomerId() == null)
+        ResponseEntity<BasicResponse> responseEntity = checkCustomerId(request.getCustomerId());
+        if (responseEntity != null)
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.EMPTY_CUSTOMER_ID));
+            return responseEntity;
         }
-        if (!CustomerIdChecker.isValid(request.getCustomerId()))
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.WRONG_CUSTOMER_ID));
-        }
+
         if (request.getApprovers().size() > numberOfApprovers)
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.WRONG_LOAN_APPROVERS));
+                    new ErrorResponse(ErrorMessages.WRONG_LOAN_APPROVERS));
         }
-
         if (!loanApproversStorage.isApproversExist(request.getApprovers()))
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.APPROVERS_NOT_FOUND));
+                    new ErrorResponse(ErrorMessages.APPROVERS_NOT_FOUND));
         }
 
         return null;
     }
 
-    private ResponseEntity<BasicResponse> checkContractApprovalRequest(@RequestBody LoanContractApprovalRequest request)
+    private ResponseEntity<BasicResponse> checkApprovalRequest(@RequestBody Approval request)
     {
-        if (request.getCustomerId() == null)
+        ResponseEntity<BasicResponse> responseEntity = checkCustomerId(request.getCustomerId());
+        if (responseEntity != null)
         {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.EMPTY_CUSTOMER_ID));
-        }
-        if (!CustomerIdChecker.isValid(request.getCustomerId()))
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.WRONG_CUSTOMER_ID));
+            return responseEntity;
         }
 
         if (!loanApproversStorage.isApproverExist(request.getLoanApprover()))
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorResponse(APIResponseCodes.APPROVER_NOT_FOUND));
+                    new ErrorResponse(ErrorMessages.APPROVER_NOT_FOUND));
+        }
+
+        return null;
+    }
+
+    private ResponseEntity<BasicResponse> checkCustomerId(String customerId) {
+        if (customerId == null)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorResponse(ErrorMessages.EMPTY_CUSTOMER_ID));
+        }
+        if (!CustomerIdChecker.isValid(customerId))
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorResponse(ErrorMessages.WRONG_CUSTOMER_ID));
         }
 
         return null;

@@ -1,4 +1,4 @@
-package com.approvalservice.app.model.request;
+package com.approvalservice.app.model.approval;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class LoanApprovalRequest
+public class PendingLoan
 {
     private String customerId;
     private long loanAmount;

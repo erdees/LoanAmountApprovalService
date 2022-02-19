@@ -15,7 +15,7 @@ import java.beans.Transient;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanContractsReport extends BasicLoanContractsReport
+public class ContractsReport extends BasicContractsReport
 {
     private long contractsCount;
     private long loanAmountsSum;

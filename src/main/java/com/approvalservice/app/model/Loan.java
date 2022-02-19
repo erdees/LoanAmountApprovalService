@@ -1,6 +1,6 @@
-package com.approvalservice.app.model.response.approval;
+package com.approvalservice.app.model;
 
-import com.approvalservice.app.model.response.api.BasicResponse;
+import com.approvalservice.app.model.response.BasicResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,16 +15,16 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class LoanContract extends BasicResponse
+public class Loan extends BasicResponse
 {
     private String userId;
     private boolean approved;
     private List<String> approverNames;
     private long loanAmount;
     private LocalDateTime createdTime;
-    private LocalDateTime approvedTime;
+    private LocalDateTime approvalTime;
 
-    public LoanContract(String message, String userId, boolean approved, List<String> approverNames, long loanAmount)
+    public Loan(String message, String userId, boolean approved, List<String> approverNames, long loanAmount)
     {
         super(message);
         this.userId = userId;
@@ -40,9 +40,9 @@ public class LoanContract extends BasicResponse
     }
 
     @Transient
-    public LocalDateTime getApprovedTime()
+    public LocalDateTime getApprovalTime()
     {
-        return approvedTime;
+        return approvalTime;
     }
 
     @Override
@@ -50,18 +50,18 @@ public class LoanContract extends BasicResponse
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LoanContract contract = (LoanContract) o;
+        Loan contract = (Loan) o;
         return approved == contract.approved &&
                 loanAmount == contract.loanAmount &&
                 userId.equals(contract.userId) &&
                 approverNames.equals(contract.approverNames) &&
                 Objects.equals(createdTime, contract.createdTime) &&
-                Objects.equals(approvedTime, contract.approvedTime);
+                Objects.equals(approvalTime, contract.approvalTime);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(userId, approved, approverNames, loanAmount, createdTime, approvedTime);
+        return Objects.hash(userId, approved, approverNames, loanAmount, createdTime, approvalTime);
     }
 }

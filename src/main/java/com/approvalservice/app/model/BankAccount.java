@@ -1,6 +1,5 @@
 package com.approvalservice.app.model;
 
-import com.approvalservice.app.model.response.approval.LoanContract;
 import lombok.*;
 
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ClientAccount
+public class BankAccount
 {
-    private final List<LoanContract> loanContracts;
+    private final List<Loan> loans;
     private boolean processing;
 }

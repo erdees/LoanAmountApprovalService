@@ -1,10 +1,10 @@
 package com.approvalservice.app.service;
 
-import com.approvalservice.app.enums.APIBusinessMessages;
-import com.approvalservice.app.model.request.LoanApprovalRequest;
-import com.approvalservice.app.model.response.api.BasicResponse;
-import com.approvalservice.app.model.response.approval.LoanContract;
-import com.approvalservice.app.model.response.approval.LoanContractApprovalRequest;
+import com.approvalservice.app.enums.BusinessMessages;
+import com.approvalservice.app.model.approval.PendingLoan;
+import com.approvalservice.app.model.response.BasicResponse;
+import com.approvalservice.app.model.approval.Approval;
+import com.approvalservice.app.model.Loan;
 import com.approvalservice.app.storage.LoanContractsStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +29,12 @@ public class LoanApprovalService
     /**
      * Here we prepare a loan contract for further approval
      */
-    public BasicResponse createLoanApprovalRequest(LoanApprovalRequest request)
+    public BasicResponse createLoanApprovalRequest(PendingLoan request)
     {
         LocalDateTime createdDate = LocalDateTime.now();
         String customerId = request.getCustomerId();
 
-        LoanContract preparedContract;
+        Loan preparedContract;
 
         if (isNew(customerId))
         {
@@ -45,7 +45,7 @@ public class LoanApprovalService
             {
                 if (loanContractsStorage.getCustomer(customerId).isProcessing())
                 {
-                    return new BasicResponse(APIBusinessMessages.CUSTOMER_CONTRACT_PENDING);
+                    return new BasicResponse(BusinessMessages.CUSTOMER_CONTRACT_PENDING);
                 }
 
                 preparedContract = createPendingContract(request, createdDate);
@@ -55,28 +55,14 @@ public class LoanApprovalService
 
         loanContractsStorage.setProcessing(customerId, true);
 
-        return new BasicResponse(APIBusinessMessages.CONTRACT_SENT_TO_APPROVAL);
-    }
-
-    private boolean isNew(String customerId)
-    {
-        return !loanContractsStorage.isContractExists(customerId);
-    }
-
-    private LoanContract createPendingContract(LoanApprovalRequest request, LocalDateTime createdDate)
-    {
-        LoanContract preparedContract = new LoanContract("Pending Loan", request.getCustomerId(),
-                false, request.getApprovers(), request.getLoanAmount());
-        preparedContract.setCreatedTime(createdDate);
-
-        return preparedContract;
+        return new BasicResponse(BusinessMessages.CONTRACT_SENT_TO_APPROVAL);
     }
 
     /**
      * Process incoming approval requests for loan managers. If request was approved, we assume that is was sent
      * to the customer, but this functionality is out of scope.
      */
-    public BasicResponse processPendingContract(LoanContractApprovalRequest request)
+    public BasicResponse processPendingContract(Approval request)
     {
         LocalDateTime approvalTime = LocalDateTime.now();
         String customerId = request.getCustomerId();
@@ -88,16 +74,37 @@ public class LoanApprovalService
                 loanContractsStorage.setLoanApproval(customerId, request.isApproved(), approvalTime);
                 loanContractsStorage.setProcessing(customerId, false);
 
-                return new BasicResponse(String.valueOf(request.isApproved()));
+                if (request.isApproved())
+                {
+                    return new BasicResponse(BusinessMessages.SUCCESSFULLY_SENT);
+                }
+                else
+                {
+                    return new BasicResponse(BusinessMessages.NOT_APPROVED);
+                }
             }
             else
             {
-                return new BasicResponse("No pending contracts");
+                return new BasicResponse(BusinessMessages.NO_PENDING_CONTRACTS);
             }
         }
         else
         {
-            return new BasicResponse("No customer");
+            return new BasicResponse(BusinessMessages.CUSTOMER_NOT_FOUND);
         }
+    }
+
+    private boolean isNew(String customerId)
+    {
+        return !loanContractsStorage.isContractExists(customerId);
+    }
+
+    private Loan createPendingContract(PendingLoan request, LocalDateTime createdDate)
+    {
+        Loan preparedContract = new Loan("Pending Loan", request.getCustomerId(),
+                false, request.getApprovers(), request.getLoanAmount());
+        preparedContract.setCreatedTime(createdDate);
+
+        return preparedContract;
     }
 }

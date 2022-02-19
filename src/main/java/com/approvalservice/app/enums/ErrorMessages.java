@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Frequent API error responses
+ * Frequent API error responses, which makes further API request process not possible.
  */
 
 @Getter
 @AllArgsConstructor
-public enum APIResponseCodes {
-
+public enum ErrorMessages
+{
     WRONG_CUSTOMER_ID("Wrong customer id. Should be in 'XX-XXXX-XXX' pattern", false),
     EMPTY_CUSTOMER_ID("Customer ID cannot be empty", false),
     EMPTY_LOAN_AMOUNT("Empty loan amount field", false),
@@ -19,5 +19,5 @@ public enum APIResponseCodes {
     APPROVER_NOT_FOUND("Approver not found or has no permission to work with this loan contract", false);
 
     private final String result;
-    private final boolean positive;
+    private final boolean success;
 }

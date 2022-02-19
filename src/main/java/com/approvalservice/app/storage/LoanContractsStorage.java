@@ -1,7 +1,7 @@
 package com.approvalservice.app.storage;
 
-import com.approvalservice.app.model.ClientAccount;
-import com.approvalservice.app.model.response.approval.LoanContract;
+import com.approvalservice.app.model.BankAccount;
+import com.approvalservice.app.model.Loan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class LoanContractsStorage
     @Value("${service.loan.sent-contracts-period}")
     private int sentContractsPeriod;
 
-    private static final ConcurrentHashMap<String, ClientAccount> customerContracts = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, BankAccount> customerContracts = new ConcurrentHashMap<>();
 
     /**
      * Check if there is contracts for provided customer Id
@@ -33,26 +33,26 @@ public class LoanContractsStorage
     /**
      * Add new customer account with approved loan
      */
-    public void createNewContract(String customerId, LoanContract response)
+    public void createNewContract(String customerId, Loan response)
     {
         customerContracts.computeIfAbsent(customerId,
-                k -> new ClientAccount(new ArrayList<>(Arrays.asList(response))));
+                k -> new BankAccount(new ArrayList<>(Arrays.asList(response))));
     }
 
     /**
      * Update existing customer account with new loan contract
      */
-    public void addLoanToContract(String customerId, LoanContract response)
+    public void addLoanToContract(String customerId, Loan response)
     {
         if (customerContracts.containsKey(customerId)) {
-            customerContracts.get(customerId).getLoanContracts().add(response);
+            customerContracts.get(customerId).getLoans().add(response);
         }
     }
 
     /**
      * Return customer account
      */
-    public ClientAccount getCustomer(String customerId)
+    public BankAccount getCustomer(String customerId)
     {
         return customerContracts.get(customerId);
     }
@@ -74,7 +74,7 @@ public class LoanContractsStorage
      */
     public boolean isPendingContracts(String customerId)
     {
-        List<LoanContract> contracts = customerContracts.get(customerId).getLoanContracts();
+        List<Loan> contracts = customerContracts.get(customerId).getLoans();
 
         return contracts.stream().anyMatch(contract -> !contract.isApproved());
     }
@@ -88,12 +88,18 @@ public class LoanContractsStorage
         {
             if (approved)
             {
-                customerContracts.forEach((k, v) -> v.getLoanContracts().forEach(c -> {
-                    c.setApprovedTime(approvalTime); c.setApproved(approved); }));
+                customerContracts.get(customerId).getLoans().forEach(c ->
+                {
+                    if (!c.isApproved())
+                    {
+                        c.setApprovalTime(approvalTime);
+                        c.setApproved(true);
+                    }
+                });
             }
             else
             {
-                customerContracts.forEach((k,v) -> v.getLoanContracts().removeIf(c -> !c.isApproved()));
+                customerContracts.get(customerId).getLoans().removeIf(c -> !c.isApproved());
             }
         }
     }
@@ -101,16 +107,17 @@ public class LoanContractsStorage
     /**
      * Get list of approved loans (contracts) sent to the customer during amount of time configured in a config.
      */
-    public List<LoanContract> getFilteredContracts(LocalDateTime time)
+    public List<Loan> getFilteredContracts(LocalDateTime currentTime)
     {
-        List<LoanContract> approvedContracts = new ArrayList<>();
+        List<Loan> filteredContracts = new ArrayList<>();
 
-        customerContracts.forEach((key, customerProfile) -> approvedContracts.addAll(customerProfile
-                .getLoanContracts().stream()
-                .filter(LoanContract::isApproved)
-                .filter(loan -> loan.getApprovedTime().isAfter(time.minusSeconds(sentContractsPeriod)))
+        customerContracts.forEach((key, customerProfile) -> filteredContracts.addAll(customerProfile
+                .getLoans().stream()
+                .filter(Objects::nonNull)
+                .filter(Loan::isApproved)
+                .filter(loan -> loan.getApprovalTime().isAfter(currentTime.minusSeconds(sentContractsPeriod)))
                 .collect(Collectors.toList())));
 
-        return approvedContracts;
+        return filteredContracts;
     }
 }
