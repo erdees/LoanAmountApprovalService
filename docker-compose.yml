@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8082:8082"
+      - "8080:8080"
     restart: unless-stopped
     volumes:
       - '.:/usr/src/app'
