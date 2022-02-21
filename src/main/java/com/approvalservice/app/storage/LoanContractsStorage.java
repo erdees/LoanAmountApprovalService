@@ -131,12 +131,16 @@ public class LoanContractsStorage
 
         customerContracts.forEach((key, customerProfile) -> filteredContracts.addAll(customerProfile
                 .getLoans().stream()
-                .filter(Objects::nonNull)
-                .filter(Loan::isApproved)
-                .filter(loan -> loan.getApprovalTime().isAfter(currentTime.minusSeconds(sentContractsPeriod)))
+                .filter(loan -> isAppropriate(loan, currentTime))
                 .collect(Collectors.toList())));
 
         return filteredContracts;
+    }
+
+    private boolean isAppropriate(Loan loan, LocalDateTime currentTime)
+    {
+        return loan.getApprovalTime() != null && loan.isApproved()
+                && loan.getApprovalTime().isAfter(currentTime.minusSeconds(sentContractsPeriod));
     }
 
     /**

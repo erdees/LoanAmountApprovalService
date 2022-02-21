@@ -1,6 +1,5 @@
 package com.approvalservice.app.model;
 
-import com.approvalservice.app.model.response.BasicResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +29,7 @@ public class Loan
         this.approved = approved;
         this.approverNames = approverNames;
         this.loanAmount = loanAmount;
+        this.createdTime = LocalDateTime.now();
     }
 
     @Transient

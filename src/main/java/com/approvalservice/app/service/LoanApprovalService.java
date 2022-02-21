@@ -31,14 +31,13 @@ public class LoanApprovalService
      */
     public BasicResponse createLoanApprovalRequest(PendingLoan request)
     {
-        LocalDateTime createdDate = LocalDateTime.now();
         String customerId = request.getCustomerId();
 
         Loan preparedContract;
 
         if (isNew(customerId))
         {
-            preparedContract = createPendingContract(request, createdDate);
+            preparedContract = createPendingContract(request);
 
             loanContractsStorage.createNewContract(customerId, preparedContract);
         } else
@@ -48,7 +47,7 @@ public class LoanApprovalService
                     return new BasicResponse(BusinessMessages.CUSTOMER_CONTRACT_PENDING);
                 }
 
-                preparedContract = createPendingContract(request, createdDate);
+                preparedContract = createPendingContract(request);
 
                 loanContractsStorage.addLoanToContract(customerId, preparedContract);
             }
@@ -104,12 +103,8 @@ public class LoanApprovalService
         return !loanContractsStorage.isContractExists(customerId);
     }
 
-    private Loan createPendingContract(PendingLoan request, LocalDateTime createdDate)
+    private Loan createPendingContract(PendingLoan request)
     {
-        Loan preparedContract = new Loan(request.getCustomerId(),
-                false, request.getApprovers(), request.getLoanAmount());
-        preparedContract.setCreatedTime(createdDate);
-
-        return preparedContract;
+        return new Loan(request.getCustomerId(), false, request.getApprovers(), request.getLoanAmount());
     }
 }
