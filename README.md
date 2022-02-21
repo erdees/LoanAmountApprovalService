@@ -113,17 +113,17 @@ Now the bot up and running, you are beautiful.
 
 ## Distro description
 
-graddle - graddle wrapper which may used on a machine without graddle installed
-src - a main source code folder
-src/integration - api/integration tests for an app
-src/main - service source code
-src/test - unit tests
-Approval.service - systemd service file for linux
-build.gradle - main graddle build file
-docker-compose.yml - docker compose file for Docker container management
-Dockerfile - settings for docker container building
-gradlew - script for running a graddle wrapper on a machine without graddle installed
-settings.graddle - graddle settings file
+graddle - graddle wrapper which may used on a machine without graddle installed \
+src - a main source code folder \
+src/integration - api/integration tests for an app \
+src/main - service source code \
+src/test - unit tests \
+Approval.service - systemd service file for linux \
+build.gradle - main graddle build file \
+docker-compose.yml - docker compose file for Docker container management \
+Dockerfile - settings for docker container building \
+gradlew - script for running a graddle wrapper on a machine without graddle installed \
+settings.graddle - graddle settings file \
 task.txt - an original task 
 
 ## Application description 
