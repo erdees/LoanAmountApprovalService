@@ -1,6 +1,6 @@
 # Loan Amount Approval Service
 This is an example of a loan amount approval service which was made as a homework to show my coding skills.
-The task was done according to the task.txt which you may find in this repo as well. 
+The task completed according to the task.txt which you may find in this repo as well. 
  
 ## Build and run 
 
@@ -111,3 +111,73 @@ and finally, to start the bot:
 
 Now the bot up and running, you are beautiful.
 
+## Distro description
+
+graddle - graddle wrapper which may used on a machine without graddle installed
+src - a main source code folder
+src/integration - api/integration tests for an app
+src/main - service source code
+src/test - unit tests
+Approval.service - systemd service file for linux
+build.gradle - main graddle build file
+docker-compose.yml - docker compose file for Docker container management
+Dockerfile - settings for docker container building
+gradlew - script for running a graddle wrapper on a machine without graddle installed
+settings.graddle - graddle settings file
+task.txt - an original task 
+
+## Application description 
+
+ApprovalService is a RESTful service that allows loan preparators to send loan contracts to loan managers for approval. 
+Loan preparator must specify the customer’s ID and the amount that customer wants to loan. 
+Loan preparator must also specify which managers need to approve it . After the specified managers have added 
+their approvals the contract will be automatically sent to the customer.
+
+### Endpoint description
+
+According to original task, an application has three endpoinds:
+1) /api/loan/request (POST) \
+Where loan preparators should create a request for loan approval. 
+The request should have the following format:
+
+````
+{
+  "customerId": "21-Q2A1-XX9",
+  "loanAmount": 1000,
+  "approvers": ["Mamertas Juronis", "Gaile Minderyte", "Nina Nugariene"]
+}
+````
+
+Where:
+
+customerId (String) should be in XX-XXXX-XXX pattern, where X is either number or a letter;
+loanAmount (numeric) should be a number;
+approvers (array of strings) should be a list of loan managers who will approve or decline the request. Max. 3 persons allowed.
+
+When a loan preparator will send a correct request (basic checks on a request format will take a place), the system 
+will put the request to a queue where it can be processed by a loan manager.
+While the customer with ID has a pending loan, new requests can't be performed. To send a new request, 
+a current one should be approved or declined.  
+
+2) /api/loan/approval (POST) \
+Where a loan manager should take a decision on a loan. 
+The request should have the following format:
+
+````
+{
+  "customerId": "21-Q2A1-XX9",
+  "loanApprover": "Mamertas Juronis",
+  "approved": true
+}
+````
+
+Where:
+
+customerId (string) should be an ID of a customer with a pending loan. 
+loanApprover (string) should be one of three or fewer approvers specified during initial request.
+approved (boolean) decision on a loan. If `false` chosen, the contract will not be sent to the customer and will not 
+appear in a report. All `true` or approved loans considered to be sent to the customer and appear in statistics. 
+
+3) /api/loan/report (GET) \
+Report which shows statistics on approved loans during configured period (can be change in a configuration file). 
+Endpoint don't have any parameters or request body.
