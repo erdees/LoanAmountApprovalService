@@ -80,6 +80,24 @@ public class LoanContractsStorage
     }
 
     /**
+     * Check if a loan manager has a permission to work with pending loan
+     */
+    public boolean isApproveAllowed(String customerId, String approver)
+    {
+        List<Loan> loans = customerContracts.get(customerId).getLoans();
+
+        for (Loan loan : loans)
+        {
+            if (loan.getApproverNames().contains(approver))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Process loan prepared contract approval by a manager
      */
     public void setLoanApproval(String customerId, boolean approved, LocalDateTime approvalTime)
@@ -119,5 +137,13 @@ public class LoanContractsStorage
                 .collect(Collectors.toList())));
 
         return filteredContracts;
+    }
+
+    /**
+     * Remove client from the map
+     */
+    public void removeContract(String customerId)
+    {
+        customerContracts.remove(customerId);
     }
 }

@@ -36,4 +36,16 @@ public class ContractsReport extends BasicContractsReport
     {
         return super.getMessage();
     }
+
+    @Override
+    public String toString()
+    {
+        return "ContractsReport{" +
+                "contractsCount=" + contractsCount +
+                ", loanAmountsSum=" + loanAmountsSum +
+                ", avgLoanAmount=" + avgLoanAmount +
+                ", maxLoanAmount=" + maxLoanAmount +
+                ", minLoanAmount=" + minLoanAmount +
+                '}';
+    }
 }

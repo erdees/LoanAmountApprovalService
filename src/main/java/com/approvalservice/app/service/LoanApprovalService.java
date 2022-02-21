@@ -71,6 +71,11 @@ public class LoanApprovalService
         {
             if (loanContractsStorage.isPendingContracts(customerId))
             {
+                if (!loanContractsStorage.isApproveAllowed(customerId, request.getLoanApprover()))
+                {
+                    return new BasicResponse(BusinessMessages.INAPPROPRIATE_APPROVER);
+                }
+
                 loanContractsStorage.setLoanApproval(customerId, request.isApproved(), approvalTime);
                 loanContractsStorage.setProcessing(customerId, false);
 
@@ -101,7 +106,7 @@ public class LoanApprovalService
 
     private Loan createPendingContract(PendingLoan request, LocalDateTime createdDate)
     {
-        Loan preparedContract = new Loan("Pending Loan", request.getCustomerId(),
+        Loan preparedContract = new Loan(request.getCustomerId(),
                 false, request.getApprovers(), request.getLoanAmount());
         preparedContract.setCreatedTime(createdDate);
 

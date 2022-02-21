@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class Loan extends BasicResponse
+public class Loan
 {
     private String userId;
     private boolean approved;
@@ -24,9 +24,8 @@ public class Loan extends BasicResponse
     private LocalDateTime createdTime;
     private LocalDateTime approvalTime;
 
-    public Loan(String message, String userId, boolean approved, List<String> approverNames, long loanAmount)
+    public Loan(String userId, boolean approved, List<String> approverNames, long loanAmount)
     {
-        super(message);
         this.userId = userId;
         this.approved = approved;
         this.approverNames = approverNames;
