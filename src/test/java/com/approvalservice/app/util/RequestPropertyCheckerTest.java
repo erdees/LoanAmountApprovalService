@@ -68,6 +68,24 @@ class RequestPropertyCheckerTest
     }
 
     @Test
+    void checkPendingLoanBodyEmptyLoanAmountTest()
+    {
+        PendingLoan loan = new PendingLoan(CUSTOMER_ID, 0, LOAN_APPROVERS);
+        RequestCheckMessages checkResult = RequestPropertyChecker.checkPendingLoanBody(loan);
+
+        assertThat(checkResult).isEqualTo(RequestCheckMessages.WRONG_LOAN_AMOUNT);
+    }
+
+    @Test
+    void checkPendingLoanBodyNegativeLoanAmountTest()
+    {
+        PendingLoan loan = new PendingLoan(CUSTOMER_ID, -1000, LOAN_APPROVERS);
+        RequestCheckMessages checkResult = RequestPropertyChecker.checkPendingLoanBody(loan);
+
+        assertThat(checkResult).isEqualTo(RequestCheckMessages.WRONG_LOAN_AMOUNT);
+    }
+
+    @Test
     void checkApprovalRequestTest()
     {
         Approval approval = new Approval(CUSTOMER_ID, "Mamertas Juronis", true);

@@ -38,6 +38,10 @@ public class RequestPropertyChecker
         {
             return RequestCheckMessages.APPROVERS_EMPTY;
         }
+        if (request.getLoanAmount() <= 0)
+        {
+            return RequestCheckMessages.WRONG_LOAN_AMOUNT;
+        }
 
         return RequestCheckMessages.REQUEST_OK;
     }

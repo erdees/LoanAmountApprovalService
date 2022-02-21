@@ -35,6 +35,7 @@ docker-compose up -d
 ``` 
 
 Build will be done automatically, once container will up and running, service will be ready. 
+By default, an application listening port 8080, so it should be available on `http://localhost:8080`
  
 ### Build and start without containers
 
@@ -89,7 +90,7 @@ Edit required parameters in the .service file.
 
 `vim  /etc/systemd/system/Approval.service`
 
-Change the bot working directory where .jar file located, for example: 
+Change the app working directory where .jar file located, for example: 
 
 `WorkingDirectory=/opt/apps/ApprovalService`
 
@@ -101,15 +102,16 @@ If you have changed anything in .service file, please reload a configuration by 
 
 `systemctl daemon-reload`
 
-To add the bot to autostart, use the command:
+To add the app to autostart, use the command:
 
 `systemctl enable Approval.service`
 
-and finally, to start the bot:
+and finally, to start the app:
 
 `systemctl start Approval.service`
 
-Now the bot up and running, you are beautiful.
+By default, an application listening port 8080, so it should be available on `http://localhost:8080`
+Now the app up and running, you are beautiful.
 
 ## Distro description
 
