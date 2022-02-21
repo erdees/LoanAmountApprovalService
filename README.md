@@ -150,9 +150,10 @@ The request should have the following format:
 
 Where:
 
-customerId (String) should be in XX-XXXX-XXX pattern, where X is either number or a letter;
-loanAmount (numeric) should be a number;
-approvers (array of strings) should be a list of loan managers who will approve or decline the request. Max. 3 persons allowed.
+customerId (String) should be in XX-XXXX-XXX pattern, where X is either number or a letter; \
+loanAmount (numeric) should be a number; \
+approvers (array of strings) should be a list of loan managers who will approve or decline the request. 
+Max. 3 persons allowed. 
 
 When a loan preparator will send a correct request (basic checks on a request format will take a place), the system 
 will put the request to a queue where it can be processed by a loan manager.
@@ -173,8 +174,8 @@ The request should have the following format:
 
 Where:
 
-customerId (string) should be an ID of a customer with a pending loan. 
-loanApprover (string) should be one of three or fewer approvers specified during initial request.
+customerId (string) should be an ID of a customer with a pending loan. \
+loanApprover (string) should be one of three or fewer approvers specified during initial request. \
 approved (boolean) decision on a loan. If `false` chosen, the contract will not be sent to the customer and will not 
 appear in a report. All `true` or approved loans considered to be sent to the customer and appear in statistics. 
 
