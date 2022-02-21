@@ -64,22 +64,13 @@ class LoanContractsStorageTest
     }
 
     @Test
-    void getCustomerTest()
-    {
-        BankAccount account = loanContractsStorage.getCustomer(CLIENT_ID);
-
-        assertThat(account.getLoans()).isNotEmpty();
-        assertThat(account.isProcessing()).isFalse();
-    }
-
-    @Test
     void setProcessingTest()
     {
         loanContractsStorage.setProcessing(CLIENT_ID, true);
 
-        BankAccount account = loanContractsStorage.getCustomer(CLIENT_ID);
+        boolean actual = loanContractsStorage.isProcessing(CLIENT_ID);
 
-        assertThat(account.isProcessing()).isTrue();
+        assertThat(actual).isTrue();
     }
 
     @Test
@@ -100,7 +91,6 @@ class LoanContractsStorageTest
         boolean actual = loanContractsStorage.isApproveAllowed(CLIENT_ID, approver);
 
         assertThat(actual).isTrue();
-
     }
 
     @Test

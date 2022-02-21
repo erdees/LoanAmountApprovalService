@@ -50,11 +50,18 @@ public class LoanContractsStorage
     }
 
     /**
-     * Return customer account
+     * Check if the customer has pending loans on its account.
      */
-    public BankAccount getCustomer(String customerId)
+    public boolean isProcessing(String cusomerId)
     {
-        return customerContracts.get(customerId);
+        if (customerContracts.containsKey(cusomerId))
+        {
+            return customerContracts.get(cusomerId).isProcessing();
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**

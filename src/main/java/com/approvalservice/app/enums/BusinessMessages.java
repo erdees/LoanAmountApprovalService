@@ -17,7 +17,7 @@ public enum BusinessMessages
     MAX_LOANS_PER_CUSTOMER("This customer already have unsecured loans. Can't approve.", HttpStatus.OK),
     NO_CONTRACTS_FOR_STAT("No recently approved contracts found, try again later.", HttpStatus.OK),
     NO_PENDING_CONTRACTS("No pending contracts found for this customer.", HttpStatus.OK),
-    CUSTOMER_NOT_FOUND("Customer with provided ID is not found.", HttpStatus.OK),
+    CUSTOMER_NOT_FOUND("Customer with provided ID is not found.", HttpStatus.NOT_FOUND),
     NOT_APPROVED("Loan contract request was declined.", HttpStatus.OK),
     INAPPROPRIATE_APPROVER("This Approver has no permission working with provided contract.", HttpStatus.OK),
     SUCCESSFULLY_SENT("Loan contract request was approved and successfully sent to the customer.", HttpStatus.OK);

@@ -1,6 +1,5 @@
 package com.approvalservice.app.controller;
 
-import com.approvalservice.app.util.RequestPropertyChecker;
 import com.approvalservice.app.enums.BusinessMessages;
 import com.approvalservice.app.model.approval.Approval;
 import com.approvalservice.app.model.approval.PendingLoan;
@@ -24,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-
 @ExtendWith(MockitoExtension.class)
 class LoanApprovalControllerTest
 {
@@ -36,9 +34,6 @@ class LoanApprovalControllerTest
 
     @Mock
     private LoanStatisticsService loanStatisticsService;
-
-    @Mock
-    private RequestPropertyChecker requestPropertyChecker;
 
     @Test
     void createLoanRequestTest()

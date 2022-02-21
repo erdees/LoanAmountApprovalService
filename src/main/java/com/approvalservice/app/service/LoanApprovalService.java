@@ -42,7 +42,7 @@ public class LoanApprovalService
             loanContractsStorage.createNewContract(customerId, preparedContract);
         } else
             {
-                if (loanContractsStorage.getCustomer(customerId).isProcessing())
+                if (loanContractsStorage.isProcessing(customerId))
                 {
                     return new BasicResponse(BusinessMessages.CUSTOMER_CONTRACT_PENDING);
                 }
