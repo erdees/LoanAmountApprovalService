@@ -30,6 +30,10 @@ public class RequestPropertyChecker
         {
             return customerIdStatus;
         }
+        if (request.getApprovers() == null)
+        {
+            return RequestCheckMessages.APPROVERS_EMPTY;
+        }
         if (request.getApprovers().size() > NUMBER_OF_APPROVERS)
         {
             return RequestCheckMessages.WRONG_LOAN_APPROVERS;
@@ -55,6 +59,10 @@ public class RequestPropertyChecker
         if (!customerIdStatus.isSuccess())
         {
             return customerIdStatus;
+        }
+        if (request.getLoanApprover() == null)
+        {
+            return RequestCheckMessages.APPROVER_EMPTY;
         }
         if (request.getLoanApprover().isEmpty())
         {

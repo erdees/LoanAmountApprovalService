@@ -68,6 +68,15 @@ class RequestPropertyCheckerTest
     }
 
     @Test
+    void checkPendingLoanBodyNullApproversTest()
+    {
+        PendingLoan loan = new PendingLoan(CUSTOMER_ID, LOAN_AMOUNT, null);
+        RequestCheckMessages checkResult = RequestPropertyChecker.checkPendingLoanBody(loan);
+
+        assertThat(checkResult).isEqualTo(RequestCheckMessages.APPROVERS_EMPTY);
+    }
+
+    @Test
     void checkPendingLoanBodyEmptyLoanAmountTest()
     {
         PendingLoan loan = new PendingLoan(CUSTOMER_ID, 0, LOAN_APPROVERS);
@@ -98,6 +107,15 @@ class RequestPropertyCheckerTest
     void checkApprovalRequestEmptyApproverTest()
     {
         Approval approval = new Approval(CUSTOMER_ID, "", true);
+        RequestCheckMessages checkResult = RequestPropertyChecker.checkApprovalRequest(approval);
+
+        assertThat(checkResult).isEqualTo(RequestCheckMessages.APPROVER_EMPTY);
+    }
+
+    @Test
+    void checkApprovalRequestNullApproverTest()
+    {
+        Approval approval = new Approval(CUSTOMER_ID, null, true);
         RequestCheckMessages checkResult = RequestPropertyChecker.checkApprovalRequest(approval);
 
         assertThat(checkResult).isEqualTo(RequestCheckMessages.APPROVER_EMPTY);

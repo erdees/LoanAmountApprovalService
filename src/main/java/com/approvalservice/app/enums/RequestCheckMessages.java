@@ -17,8 +17,8 @@ public enum RequestCheckMessages
     WRONG_LOAN_APPROVERS("Loan approvers: should be no more than three persons", false),
     APPROVERS_NOT_FOUND("One or more approvers was not found in the database", false),
     APPROVER_NOT_FOUND("Approver not found or has no permission to work with this loan contract", false),
-    APPROVER_EMPTY("Approver value is empty", false),
-    APPROVERS_EMPTY("Approvers value is empty", false),
+    APPROVER_EMPTY("Approver value is empty or null", false),
+    APPROVERS_EMPTY("Approvers value is empty or null", false),
     REQUEST_OK("Success", true);
 
     private final String result;
